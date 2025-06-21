@@ -70,8 +70,22 @@ namespace RGBGame.Infrastructure.Controllers
         [HttpPost("{sessionId:guid}/check")]
         public async Task<ActionResult<SessionAnswerDto>> CheckValues(Guid sessionId, [FromBody] CheckValueRequest req)
         {
-            var result = _logic.CheckValueAsync(sessionId, req.Number, req.Answer);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var result = await _logic.CheckValueAsync(sessionId, req.Number, req.Answer);
+                return Ok(result);
+            }
+            catch (ArgumentException arg)
+            {
+                return NotFound(arg.Message);
+            }
+            catch (InvalidOperationException arg)
+            {
+                return BadRequest(arg.Message);
+            }
         }
     }
 }
