@@ -20,11 +20,20 @@ namespace RGBGame.Infrastructure.Controllers
 
         // game management
         [HttpPost]
-        public async Task<ActionResult<SessionDto>> StartSession([FromBody] SessionDto dto)
+        public async Task<ActionResult<SessionDto>> StartSession([FromBody] StartSessionRequest req)
         {
-            var session = await _service.StartSessionAsync(dto.GameId);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            return CreatedAtAction(nameof(GetResults), new { session = session.SessionId }, session);
+            try
+            {
+                var session = await _service.StartSessionAsync(req.GameId);
+                return CreatedAtAction(nameof(GetResults), new { sessionId = session.Id }, session);
+            }
+            catch (ArgumentException arg)
+            {
+                return BadRequest(arg);
+            }
         }
 
         [HttpPost("{sessionId:Guid}")]
