@@ -19,7 +19,7 @@ namespace RGBGame.Infrastructure.Controllers
         }
 
         // game management
-        [HttpPost("start")]
+        [HttpPost]
         public async Task<ActionResult<SessionDto>> StartSession([FromBody] SessionDto dto)
         {
             var session = await _service.StartSessionAsync(dto.GameId);
@@ -27,7 +27,7 @@ namespace RGBGame.Infrastructure.Controllers
             return CreatedAtAction(nameof(GetResults), new { session = session.SessionId }, session);
         }
 
-        [HttpPost("{sessionId:Guid}/results")]
+        [HttpPost("{sessionId:Guid}")]
         public async Task<ActionResult<SessionDto>> GetResults(Guid sessionId)
         {
             var results = await _service.GetGameResultsAsync(sessionId);
