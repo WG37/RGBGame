@@ -26,6 +26,7 @@ namespace RGBGame.Infrastructure.Data
                 .ToTable(t => t.HasCheckConstraint("CK_Rule_NonNegDivisor", "[DIVISOR] >= 0"))
                 .Property(r => r.Divisor)
                 .IsRequired();
+                
 
             // ensure unique game names
             modelBuilder.Entity<Game>()
@@ -52,6 +53,7 @@ namespace RGBGame.Infrastructure.Data
                 builder.HasKey(a => a.Id);
                 builder.Property(a => a.Number).IsRequired();
                 builder.Property(a => a.AnswerSubmission).IsRequired();
+                builder.Property(a => a.ExpectedAnswer).IsRequired();
                 builder.Property(a => a.IsCorrect).IsRequired();
             });
         }
