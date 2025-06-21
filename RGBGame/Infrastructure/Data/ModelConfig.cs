@@ -12,7 +12,7 @@ namespace RGBGame.Infrastructure.Data
 
             modelBuilder.Entity<Game>()
                 .HasMany(g => g.Rules)
-                .WithOne()
+                .WithOne(r => r.Game)
                 .HasForeignKey(r => r.GameId)
                 .OnDelete(DeleteBehavior.Cascade);
 
