@@ -15,11 +15,16 @@ namespace RGBGame
             builder.Services.AddDbContext<AppDbContext>(o =>
             o.UseSqlServer(builder.Configuration.GetConnectionString("")));
 
+            // sessionServices
             builder.Services.AddScoped<IGameCrudService, GameCrudService>();
             builder.Services.AddScoped<IGameQueryService, GameQueryService>();
-
+            // gameServices
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<ISessionLogicService, SessionLogicService>();
+
+            // cors policy for react 
+            builder.Services.AddCors(p => p.AddPolicy("AllowClient",
+                config => config.WithOrigins("Http://localhost:3000").AllowAnyHeader().AllowAnyMethod()));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,6 +33,8 @@ namespace RGBGame
 
             var app = builder.Build();
 
+
+            app.UseCors("AllowClient");
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
