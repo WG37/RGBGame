@@ -56,8 +56,15 @@ namespace RGBGame.Infrastructure.Controllers
         [HttpGet("{sessionId:Guid}/next")]
         public async Task<ActionResult<SessionDto>> NextNumber(Guid sessionId)
         {
-            var dto = await _logic.NextNumberAsync(sessionId);
-            return Ok(dto);
+            try
+            {
+                var session = await _logic.NextNumberAsync(sessionId);
+                return Ok(sessionId);
+            }
+            catch (ArgumentException args)
+            {
+                return NotFound(args.Message);
+            }
         }
 
         [HttpPost("{sessionId:guid}/check")]
