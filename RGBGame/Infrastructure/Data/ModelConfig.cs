@@ -16,6 +16,11 @@ namespace RGBGame.Infrastructure.Data
                 .HasForeignKey(r => r.GameId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Game>()
+                .HasMany(g => g.Sessions)
+                .WithOne(s => s.Game)
+                .HasForeignKey(s => s.GameId);
+
             // checks that rule table divisor property is non-negative (expressed w/ SQL)
             modelBuilder.Entity<Rule>()
                 .ToTable(t => t.HasCheckConstraint("CK_Rule_NonNegDivisor", "[DIVISOR] >= 0"))
