@@ -32,17 +32,22 @@ namespace RGBGame.Infrastructure.Controllers
             }
             catch (ArgumentException arg)
             {
-                return BadRequest(arg);
+                return BadRequest(arg.Message);
             }
         }
 
         [HttpPost("{sessionId:Guid}")]
         public async Task<ActionResult<SessionDto>> GetResults(Guid sessionId)
         {
-            var results = await _service.GetGameResultsAsync(sessionId);
-            if (results.CorrectTotal == 0 && results.IncorrectTotal == 0)
-                return NotFound();
-            return Ok("results");
+            try
+            {
+                var session = await _service.GetGameResultsAsync(sessionId);
+                return Ok(session);
+            }
+            catch (ArgumentException arg)
+            {
+                return NotFound(arg.Message);
+            }
         }
 
 
