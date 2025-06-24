@@ -60,7 +60,7 @@ namespace RGBGame.Infrastructure.Controllers
         {
             try
             {
-                var game =  _crudService.DeleteGameAsync(id);
+                var game = _crudService.DeleteGameAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException arg)
@@ -86,7 +86,7 @@ namespace RGBGame.Infrastructure.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameDto>>> GetAllGames()
+        public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
             try
             {
