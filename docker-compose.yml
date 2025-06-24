@@ -3,7 +3,7 @@ services:
   api:
     build: ./RGBGame
     ports:
-      - "5000:80"
+      - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
