@@ -42,7 +42,7 @@ namespace RGBGame.Infrastructure.Controllers
 
             try
             {
-                var game = _crudService.UpdateGameAsync(id, dto);
+                var game = await _crudService.UpdateGameAsync(id, dto);
                 return Ok(game);
             }
             catch (KeyNotFoundException arg)
@@ -60,7 +60,7 @@ namespace RGBGame.Infrastructure.Controllers
         {
             try
             {
-                var game = _crudService.DeleteGameAsync(id);
+                var game =  _crudService.DeleteGameAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException arg)
@@ -76,7 +76,7 @@ namespace RGBGame.Infrastructure.Controllers
         {
             try
             {
-                var game = _queryService.GetGameByIdAsync(id);
+                var game = await _queryService.GetGameByIdAsync(id);
                 return Ok(game);
             }
             catch (KeyNotFoundException arg)
@@ -90,7 +90,7 @@ namespace RGBGame.Infrastructure.Controllers
         {
             try
             {
-                var games = _queryService.GetAllGamesAsync();
+                var games = await _queryService.GetAllGamesAsync();
                 return Ok(games);
             }
             catch (KeyNotFoundException arg)
