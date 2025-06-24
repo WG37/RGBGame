@@ -13,7 +13,7 @@ namespace RGBGame
 
             // Add services to the container.
             builder.Services.AddDbContext<AppDbContext>(o =>
-            o.UseSqlServer(builder.Configuration.GetConnectionString("")));
+            o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             // sessionServices
             builder.Services.AddScoped<IGameCrudService, GameCrudService>();
