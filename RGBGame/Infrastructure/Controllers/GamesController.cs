@@ -25,7 +25,7 @@ namespace RGBGame.Infrastructure.Controllers
 
             try
             {
-                var game = _crudService.CreateGameAsync(createDto);
+                var game = await _crudService.CreateGameAsync(createDto);
                 return CreatedAtAction(nameof(GetGameById), new { id = game.Id }, game);
             }
             catch (ArgumentException arg)
