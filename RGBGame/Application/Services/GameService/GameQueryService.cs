@@ -37,27 +37,26 @@ namespace RGBGame.Application.Services.GameService
 
         public async Task<IEnumerable<GameDto>> GetAllGamesAsync()
         {
-            var games = await _db.Games.FindAsync() ??
-                throw new KeyNotFoundException("No games found. Go to the create page to create a game.");
+            var games = await _db.Games.Include(g => g.Rules).ToListAsync();
 
-            return new List<GameDto>
+            if (!games.Any()) 
+                throw new KeyNotFoundException("No existing games found.");
+
+            return games.Select(g => new GameDto
             {
-                new GameDto
-                {
-                    Id = games.Id,
-                    Name = games.Name,
-                    Author = games.Author,
-                    MinRange = games.MinRange,
-                    MaxRange = games.MaxRange,
-                    Rules = games.Rules?
-                                 .Select(r => new RuleDto
-                                 {
-                                     Id = r.Id,
-                                     Divisor = r.Divisor,
-                                     Word = r.Word
-                                 }).ToList()!
-                }
-            };
+                Id = g.Id,
+                Name = g.Name,
+                Author = g.Author,
+                MinRange = g.MinRange,
+                MaxRange = g.MaxRange,
+                Rules = g.Rules
+                         .Select(r => new RuleDto
+                         {
+                             Id = r.Id,
+                             Divisor = r.Divisor,
+                             Word = r.Word
+                         }).ToList()
+            }).ToList();
         }
     }
 }
