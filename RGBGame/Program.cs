@@ -34,7 +34,14 @@ namespace RGBGame
             var app = builder.Build();
 
 
-            app.UseCors("AllowClient");
+            // auto migration on program start
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.Migrate();
+            }
+
+                app.UseCors("AllowClient");
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
