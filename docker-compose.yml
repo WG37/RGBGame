@@ -27,3 +27,8 @@ services:
       - "1433:1433"
     volumes:
       - dbdata:/var/opt/mssql
+
+
+volumes:
+    dbdata:
+
