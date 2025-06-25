@@ -13,12 +13,29 @@ namespace RGBGame.Application.Services.SessionService
         public async Task<SessionDto> NextNumberAsync(Guid sessionId)
         {
             var session = await _db.Sessions
+                .Include(s => s.Game)
+                .ThenInclude(g => g.Rules)
                 .Include(s => s.Answers)
                 .SingleOrDefaultAsync(s => s.Id == sessionId) ??
                     throw new ArgumentException($"No session exists with id: {sessionId}", nameof(sessionId));
 
-            session.CurrentNumber++;
+            // no reusing numbers -- hashed out
+            var used = session.Answers.Select(a => a.Number).ToHashSet();
 
+            // sample space of possible numbers
+            var min = session.Game.MinRange;
+            var max = session.Game.MaxRange;
+            var sampleSpace = Enumerable.Range(min, max - min + 1)
+                                        .Where(n => !used.Contains(n)).ToList();
+
+            if (!sampleSpace.Any())
+                throw new InvalidOperationException("No numbers left in sequence");
+
+            // ensures numbers are picked random every session
+            var rnd = new Random();
+            var next = sampleSpace[rnd.Next(sampleSpace.Count)]; // next number randomly pulled from the space
+
+            session.CurrentNumber = next;
             await _db.SaveChangesAsync();
 
             // return incremented value
