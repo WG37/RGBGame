@@ -24,7 +24,7 @@ namespace RGBGame
 
             // cors policy for react 
             builder.Services.AddCors(p => p.AddPolicy("AllowClient",
-                config => config.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()));
+                config => config.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
