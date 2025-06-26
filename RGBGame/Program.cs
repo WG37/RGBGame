@@ -24,7 +24,7 @@ namespace RGBGame
 
             // cors policy for react 
             builder.Services.AddCors(p => p.AddPolicy("AllowClient",
-                config => config.WithOrigins("Http://localhost:3000").AllowAnyHeader().AllowAnyMethod()));
+                config => config.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,7 +33,6 @@ namespace RGBGame
 
             var app = builder.Build();
 
-
             // auto migration on program start
             using (var scope = app.Services.CreateScope())
             {
@@ -41,7 +40,6 @@ namespace RGBGame
                 db.Database.Migrate();
             }
 
-                app.UseCors("AllowClient");
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -49,7 +47,11 @@ namespace RGBGame
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            app.UseRouting();
+
+            app.UseCors("AllowClient");
+
+            // app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
