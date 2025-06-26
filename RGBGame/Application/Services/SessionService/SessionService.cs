@@ -12,17 +12,27 @@ namespace RGBGame.Application.Services.SessionService
 
         public async Task<SessionDto> StartSessionAsync(int gameId)
         {
+            var game = await _db.Games
+                .Include(g => g.Rules)
+                .SingleOrDefaultAsync(g => g.Id == gameId) ??
+                 throw new ArgumentException($"No game exists with {gameId}", nameof(gameId));
+
+            // random number start from in range
+            var rnd = new Random();
+            var startingNumber = rnd.Next(game.MinRange, game.MaxRange + 1);
+
             var session = new Session
             {
                 Id = Guid.NewGuid(),
                 GameId = gameId,
                 Start = DateTime.UtcNow,
                 End = null,
-                CurrentNumber = 0,
+                CurrentNumber = startingNumber,
                 CorrectTotal = 0,
                 IncorrectTotal = 0,
                 Answers = new List<SessionAnswer>()
             };
+
             _db.Sessions.Add(session);
             await _db.SaveChangesAsync();
 
