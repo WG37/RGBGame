@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using RGBGame.Application.Services.GameService;
 using RGBGame.Application.Services.SessionService;
 using RGBGame.Infrastructure.Data;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RGBGame
 {
@@ -26,7 +28,13 @@ namespace RGBGame
             builder.Services.AddCors(p => p.AddPolicy("AllowClient",
                 config => config.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                   .AddJsonOptions(o =>
+                   {
+                       o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                       o.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                   });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
