@@ -36,7 +36,7 @@ namespace RGBGame.Infrastructure.Controllers
             }
         }
 
-        [HttpPost("{sessionId:Guid}")]
+        [HttpGet("{sessionId:Guid}")]
         public async Task<ActionResult<SessionDto>> GetResults(Guid sessionId)
         {
             try
