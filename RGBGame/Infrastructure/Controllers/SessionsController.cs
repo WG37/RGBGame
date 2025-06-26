@@ -59,7 +59,7 @@ namespace RGBGame.Infrastructure.Controllers
             try
             {
                 var session = await _logic.NextNumberAsync(sessionId);
-                return Ok(sessionId);
+                return Ok(session);
             }
             catch (ArgumentException args)
             {
