@@ -60,7 +60,7 @@ namespace RGBGame.Infrastructure.Controllers
         {
             try
             {
-                var game = _crudService.DeleteGameAsync(id);
+                await _crudService.DeleteGameAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException arg)
