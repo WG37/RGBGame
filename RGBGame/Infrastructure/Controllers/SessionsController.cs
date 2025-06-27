@@ -65,6 +65,10 @@ namespace RGBGame.Infrastructure.Controllers
             {
                 return NotFound(args.Message);
             }
+            catch (InvalidOperationException args)
+            {
+                return BadRequest(args.Message);
+            }
         }
 
         [HttpPost("{sessionId:guid}/check")]
