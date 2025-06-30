@@ -73,18 +73,13 @@ export default function CreateGamePage(): JSX.Element {
         mb="lg"
       >
         <Title
-        order={2}
-        style={{
-          cursor: 'pointer',
-          background: 'linear-gradient(90deg, red, green, blue)',
-          /* cast to satisfy TS for vendor‐prefixed props */
-          WebkitBackgroundClip: 'text' as any,
-          WebkitTextFillColor: 'transparent',
-        } as React.CSSProperties}
-        onClick={() => navigate('/')}
-      >
-        RGB Game
-      </Title>
+          order={2}
+          c="yellow.4"
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/')}
+        >
+          RGB Game
+        </Title>
         <Group ml="auto">
           <Button
             variant="subtle"

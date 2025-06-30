@@ -9,7 +9,6 @@ export default function SessionPage(): JSX.Element {
   const navigate = useNavigate()
   const sessionGameId = Number(gameId)
 
-  // declare SessionDto consts
   const [sessionId, setSessionId] = useState<string>('')
   const [currentNumber, setCurrentNumber] = useState<number>(0)
   const [answers, setAnswers] = useState<SessionAnswerDto[]>([])
@@ -102,13 +101,8 @@ export default function SessionPage(): JSX.Element {
       >
         <Title
           order={2}
-          style={{
-            cursor: 'pointer',
-            background: 'linear-gradient(90deg, red, green, blue)',
-            /* cast to satisfy TS for vendor‐prefixed props */
-            WebkitBackgroundClip: 'text' as any,
-            WebkitTextFillColor: 'transparent',
-          } as React.CSSProperties}
+          c="yellow.4"
+          style={{ cursor: 'pointer' }}
           onClick={() => navigate('/')}
         >
           RGB Game

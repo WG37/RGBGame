@@ -43,17 +43,11 @@ export default function ResultsPage(): JSX.Element{
 
       return (
     <>
-      {/* Header */}
       <Group component="header" py="md" px="xl" bg="dark.8" align="center" mb="lg">
         <Title
           order={2}
-          style={{
-            cursor: 'pointer',
-            background: 'linear-gradient(90deg, red, green, blue)',
-            /* cast to satisfy TS for vendor‐prefixed props */
-            WebkitBackgroundClip: 'text' as any,
-            WebkitTextFillColor: 'transparent',
-          } as React.CSSProperties}
+          c="yellow.4"
+          style={{ cursor: 'pointer' }}
           onClick={() => navigate('/')}
         >
           RGB Game

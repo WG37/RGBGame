@@ -7,15 +7,10 @@ export default function HomePage() {
   return (
     <>
       <Group component="header" py="md" px="xl" bg="dark.8" align="center" mb="lg">
-        <Title
+      <Title
           order={2}
-          style={{
-            cursor: 'pointer',
-            background: 'linear-gradient(90deg, red, green, blue)',
-            /* cast to satisfy TS for vendor‐prefixed props */
-            WebkitBackgroundClip: 'text' as any,
-            WebkitTextFillColor: 'transparent',
-          } as React.CSSProperties}
+          c="yellow.4"
+          style={{ cursor: 'pointer' }}
           onClick={() => navigate('/')}
         >
           RGB Game
@@ -28,15 +23,10 @@ export default function HomePage() {
 
       <Card shadow="lg" p="xl" radius="md" maw={480} mx="auto" mt="xl" withBorder>
         <Stack gap="md" align="center">
-          <Title
+         <Title
             order={2}
-            style={{
-              cursor: 'pointer',
-              background: 'linear-gradient(90deg, red, green, blue)',
-              /* cast to satisfy TS for vendor‐prefixed props */
-              WebkitBackgroundClip: 'text' as any,
-              WebkitTextFillColor: 'transparent',
-            } as React.CSSProperties}
+            c="yellow.4"
+            style={{ cursor: 'pointer' }}
             onClick={() => navigate('/')}
           >
             RGB Game

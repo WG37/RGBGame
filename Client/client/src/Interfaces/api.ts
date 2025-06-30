@@ -50,7 +50,7 @@ export interface SessionDto {
   id: string           // guidd
   gameId: number
   start: string        //  start timestamp
-  end?: string | null  //   end timestamp - nulls if in use
+  end?: string | null  //   end timestamp  nulls if in use
   currentNumber: number
   correctTotal: number
   incorrectTotal: number
