@@ -1,24 +1,16 @@
-import React, { JSX, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import header from '../components/Header';
+import Header from '../components/Header';
 import AnswerForm from '../components/AnswerForm';
 import SessionTable from '../components/SessionTable';
-import { startSession, checkValues, nextNumber } from '../services/';
+import { startSession, checkValues, nextNumber } from '../services/api';
 import {
   StartSessionRequest,
   SessionDto,
   SessionAnswerDto,
   CheckValueRequest,
 } from '../interfaces/session';
-import {
-  Box,
-  Title,
-  Loader,
-  Center,
-  Text,
-  Alert,
-} from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { Box, Title, Loader, Center, Text, Alert } from '@mantine/core';
 
 export default function SessionPage(): JSX.Element {
   const { gameId } = useParams<{ gameId: string }>();
@@ -28,6 +20,7 @@ export default function SessionPage(): JSX.Element {
   const [sessionId, setSessionId] = useState<string>('');
   const [currentNumber, setCurrentNumber] = useState<number>(0);
   const [answers, setAnswers] = useState<SessionAnswerDto[]>([]);
+  const [answer, setAnswer] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +35,6 @@ export default function SessionPage(): JSX.Element {
     try {
       const req: StartSessionRequest = { gameId: sessionGameId };
       const session: SessionDto = await startSession(req);
-
       setSessionId(session.id);
       setCurrentNumber(session.currentNumber);
       setAnswers(session.answers);
@@ -53,19 +45,19 @@ export default function SessionPage(): JSX.Element {
     }
   }
 
-  async function handleSubmit(answerValue: string) {
+  async function handleSubmit(value: string) {
     if (!sessionId) return;
     setSubmitting(true);
     setError(null);
 
-    const req: CheckValueRequest = { number: currentNumber, answer: answerValue };
+    const req: CheckValueRequest = { number: currentNumber, answer: value };
 
     try {
       const result = await checkValues(sessionId, req);
       setAnswers(prev => [...prev, result]);
-
       const next = await nextNumber(sessionId);
       setCurrentNumber(next.currentNumber);
+      setAnswer('');
     } catch (err: any) {
       if (err.message.includes('No numbers left')) {
         navigate(`/sessions/${sessionId}/results`);
@@ -98,119 +90,29 @@ export default function SessionPage(): JSX.Element {
       <Header />
 
       <Title order={3} mb="md">
-        Current Number: {currentNumber}
+        Playing Game #{sessionGameId}
       </Title>
 
       {error && (
-        <Alert
-          icon={<IconAlertCircle size={16} />}
-          title="Error"
-          color="red"
-          mb="md"
-        >
+        <Alert title="Error" color="red" mb="md">
           {error}
         </Alert>
       )}
 
+      <Text mb="sm">Current Number: {currentNumber}</Text>
+
       <AnswerForm
-        answer={''}
+        answer={answer}
         isSubmitting={submitting}
+        onAnswerChange={setAnswer}
         onSubmit={handleSubmit}
       />
+
+      <Title order={4} mt="lg" mb="sm">
+        Past Answers
+      </Title>
 
       <SessionTable answers={answers} />
     </Box>
   );
-}
-
-  return (
-    <>
-      <Group
-        component="header"
-        py="md"
-        px="xl"
-        bg="dark.8"
-        align="center"
-        mb="lg"
-      >
-        <Title
-          order={2}
-          c="yellow.4"
-          style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/')}
-        >
-          RGB Game
-        </Title>
-        <Group ml="auto">
-          <Button
-            variant="subtle"
-            color="yellow"
-            onClick={() => navigate('/games')}
-          >
-            Games
-          </Button>
-          <Button
-            variant="subtle"
-            color="yellow"
-            onClick={() => navigate('/games/new')}
-          >
-            Create
-          </Button>
-        </Group>
-      </Group>
-
-      <Box maw={600} mx="auto" p="md">
-        <Title order={3} mb="md">
-          Playing Game #{sessionGameId}
-        </Title>
-
-        {error && (
-          <Text c="red" mb="sm">
-            {error}
-          </Text>
-        )}
-
-        <Text mb="sm">Current number: {currentNumber}</Text>
-
-        <form onSubmit={handleSubmit}>
-          <Group mb="md">
-            <TextInput
-              label="Your answer"
-              value={answer}
-              onChange={(e) => setAnswer(e.currentTarget.value)}
-              disabled={submitting}
-              required
-              flex={1}
-            />
-            <Button type="submit" loading={submitting}>
-              Submit
-            </Button>
-          </Group>
-        </form>
-
-        <Title order={4} mb="sm">
-          Past Answers
-        </Title>
-
-        <Table striped highlightOnHover>
-          <thead>
-            <tr>
-              <th>Number</th>
-              <th>Your Answer</th>
-              <th>Correct?</th>
-            </tr>
-          </thead>
-          <tbody>
-            {answers.map((ans) => (
-              <tr key={ans.id}>
-                <td>{ans.number}</td>
-                <td>{ans.answerSubmission}</td>
-                <td>{ans.isCorrect ? 'Yes' : 'No'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Box>
-    </>
-  )
 }
