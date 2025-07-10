@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from '@mantine/core';
-import { SessionAnswerDto } from '../interfaces/session';
+import { SessionAnswerDto } from '../interfaces/Session';
 
 interface SessionTableProps {
   answers: SessionAnswerDto[];
