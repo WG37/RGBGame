@@ -1,75 +1,79 @@
-import React, { useState, useEffect, JSX } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import {startSession, checkValues, nextNumber } from '../Services/api-handler'
-import { StartSessionRequest, SessionDto, SessionAnswerDto, CheckValueRequest, } from '../Interfaces/api'
-import { Box, Title, TextInput, Button, Group, Table, Loader, Center, Text, } from '@mantine/core'
+import React, { JSX, useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import header from '../components/Header';
+import AnswerForm from '../components/AnswerForm';
+import SessionTable from '../components/SessionTable';
+import { startSession, checkValues, nextNumber } from '../services/';
+import {
+  StartSessionRequest,
+  SessionDto,
+  SessionAnswerDto,
+  CheckValueRequest,
+} from '../interfaces/session';
+import {
+  Box,
+  Title,
+  Loader,
+  Center,
+  Text,
+  Alert,
+} from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
 
 export default function SessionPage(): JSX.Element {
-  const { gameId } = useParams<{ gameId: string }>()
-  const navigate = useNavigate()
-  const sessionGameId = Number(gameId)
+  const { gameId } = useParams<{ gameId: string }>();
+  const navigate = useNavigate();
+  const sessionGameId = Number(gameId);
 
-  const [sessionId, setSessionId] = useState<string>('')
-  const [currentNumber, setCurrentNumber] = useState<number>(0)
-  const [answers, setAnswers] = useState<SessionAnswerDto[]>([])
-  const [answer, setAnswer] = useState<string>('')
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [sessionId, setSessionId] = useState<string>('');
+  const [currentNumber, setCurrentNumber] = useState<number>(0);
+  const [answers, setAnswers] = useState<SessionAnswerDto[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const req: StartSessionRequest = { gameId: sessionGameId }
-        const s = await startSession(req)
-        setSessionId(s.id)
-        setCurrentNumber(s.currentNumber)
-        setAnswers(s.answers)
-      } catch (err: any) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    })()
-  }, [sessionGameId])
+    loadSession();
+  }, [sessionGameId]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!sessionId) return
+  async function loadSession() {
+    setLoading(true);
+    setError(null);
+    try {
+      const req: StartSessionRequest = { gameId: sessionGameId };
+      const session: SessionDto = await startSession(req);
 
-    setSubmitting(true)
-    setError(null)
-
-    const req: CheckValueRequest = {
-      number: currentNumber,
-      answer: answer,
+      setSessionId(session.id);
+      setCurrentNumber(session.currentNumber);
+      setAnswers(session.answers);
+    } catch (err: any) {
+      setError(err.message || 'Failed to start session');
+    } finally {
+      setLoading(false);
     }
+  }
 
-    console.log("CheckValues payload:", JSON.stringify(req));
+  async function handleSubmit(answerValue: string) {
+    if (!sessionId) return;
+    setSubmitting(true);
+    setError(null);
+
+    const req: CheckValueRequest = { number: currentNumber, answer: answerValue };
 
     try {
-      const result = await checkValues(sessionId, req)
+      const result = await checkValues(sessionId, req);
+      setAnswers(prev => [...prev, result]);
 
-      // adds new answer to past answers
-      setAnswers(prev => [...prev, result])
-
-      try {
-        // gets the next number and resets input
-        const next = await nextNumber(sessionId)
-        setCurrentNumber(next.currentNumber)
-        setAnswer('')
-      } catch (nextErr: any) {
-        // if no numbers left game finished, navigate to results
-        if (nextErr.message.includes('No numbers left')) {
-          navigate(`/sessions/${sessionId}/results`)
-          return
-        }
-        setError(nextErr.message)
-      }
+      const next = await nextNumber(sessionId);
+      setCurrentNumber(next.currentNumber);
     } catch (err: any) {
-      setError(err.message)
+      if (err.message.includes('No numbers left')) {
+        navigate(`/sessions/${sessionId}/results`);
+        return;
+      }
+      setError(err.message);
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -78,16 +82,46 @@ export default function SessionPage(): JSX.Element {
       <Center style={{ height: '100vh' }}>
         <Loader size="lg" />
       </Center>
-    )
+    );
   }
 
   if (!sessionId) {
     return (
       <Center style={{ height: '100vh' }}>
-        <Text c="red">Unable to start session.</Text>
+        <Text color="red">Unable to start session.</Text>
       </Center>
-    )
+    );
   }
+
+  return (
+    <Box p="lg">
+      <Header />
+
+      <Title order={3} mb="md">
+        Current Number: {currentNumber}
+      </Title>
+
+      {error && (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title="Error"
+          color="red"
+          mb="md"
+        >
+          {error}
+        </Alert>
+      )}
+
+      <AnswerForm
+        answer={''}
+        isSubmitting={submitting}
+        onSubmit={handleSubmit}
+      />
+
+      <SessionTable answers={answers} />
+    </Box>
+  );
+}
 
   return (
     <>
