@@ -1,11 +1,11 @@
+using BE.Application.Services.GameService;
+using BE.Application.Services.SessionService;
+using BE.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using RGBGame.Application.Services.GameService;
-using RGBGame.Application.Services.SessionService;
-using RGBGame.Infrastructure.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RGBGame
+namespace BE
 {
     public class Program
     {

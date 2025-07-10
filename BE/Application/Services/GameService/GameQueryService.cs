@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BE.Application.DTOs.GameServiceDtos;
+using BE.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using RGBGame.Application.DTOs.GameServiceDtos;
-using RGBGame.Infrastructure.Data;
 
-namespace RGBGame.Application.Services.GameService
+namespace BE.Application.Services.GameService
 {
     public class GameQueryService : IGameQueryService
     {

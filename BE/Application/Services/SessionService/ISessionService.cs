@@ -1,6 +1,6 @@
-﻿using RGBGame.Application.DTOs.SessionServiceDtos;
+﻿using BE.Application.DTOs.SessionServiceDtos;
 
-namespace RGBGame.Application.Services.SessionService
+namespace BE.Application.Services.SessionService
 {
     public interface ISessionService
     {

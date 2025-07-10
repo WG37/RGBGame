@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RGBGame.Domain.Entities;
+﻿using BE.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace RGBGame.Infrastructure.Data
+namespace BE.Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {

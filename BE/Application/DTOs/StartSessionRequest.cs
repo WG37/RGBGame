@@ -1,4 +1,4 @@
-﻿namespace RGBGame.Application.DTOs
+﻿namespace BE.Application.DTOs
 {
     public record StartSessionRequest
     {

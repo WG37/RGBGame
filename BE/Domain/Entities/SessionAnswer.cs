@@ -1,4 +1,4 @@
-﻿namespace RGBGame.Domain.Entities
+﻿namespace BE.Domain.Entities
 {
     public class SessionAnswer
     {

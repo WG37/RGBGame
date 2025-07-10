@@ -1,4 +1,4 @@
-﻿namespace RGBGame.Application.DTOs
+﻿namespace BE.Application.DTOs
 {
     // only used to bind incoming JSON requests =>  // SessionsController CheckValue method //
     public record CheckValueRequest

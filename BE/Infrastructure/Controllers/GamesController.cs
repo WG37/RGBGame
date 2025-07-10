@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RGBGame.Application.DTOs.GameServiceDtos;
-using RGBGame.Application.Services.GameService;
+﻿using BE.Application.DTOs.GameServiceDtos;
+using BE.Application.Services.GameService;
+using Microsoft.AspNetCore.Mvc;
 
-namespace RGBGame.Infrastructure.Controllers
+namespace BE.Infrastructure.Controllers
 {
     [ApiController]
     [Route("api/games")]

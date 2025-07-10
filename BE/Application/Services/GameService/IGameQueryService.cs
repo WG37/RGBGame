@@ -1,6 +1,6 @@
-﻿using RGBGame.Application.DTOs.GameServiceDtos;
+﻿using BE.Application.DTOs.GameServiceDtos;
 
-namespace RGBGame.Application.Services.GameService
+namespace BE.Application.Services.GameService
 {
     public interface IGameQueryService
     {

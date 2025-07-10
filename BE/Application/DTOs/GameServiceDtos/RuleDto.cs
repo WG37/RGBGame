@@ -1,4 +1,4 @@
-﻿namespace RGBGame.Application.DTOs.GameServiceDtos
+﻿namespace BE.Application.DTOs.GameServiceDtos
 {
     public record RuleDto
     {

@@ -1,4 +1,4 @@
-﻿namespace RGBGame.Application.DTOs.SessionServiceDtos
+﻿namespace BE.Application.DTOs.SessionServiceDtos
 {
     public record SessionDto
     {

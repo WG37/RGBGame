@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RGBGame.Application.DTOs;
-using RGBGame.Application.DTOs.SessionServiceDtos;
-using RGBGame.Application.Services.SessionService;
+﻿using BE.Application.DTOs;
+using BE.Application.DTOs.SessionServiceDtos;
+using BE.Application.Services.SessionService;
+using Microsoft.AspNetCore.Mvc;
 
-namespace RGBGame.Infrastructure.Controllers
+namespace BE.Infrastructure.Controllers
 {
     [ApiController]
     [Route("api/sessions")]

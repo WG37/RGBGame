@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RGBGame.Application.DTOs.SessionServiceDtos;
+﻿using BE.Application.DTOs.SessionServiceDtos;
+using BE.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using RGBGame.Domain.Entities;
-using RGBGame.Infrastructure.Data;
 
-namespace RGBGame.Application.Services.SessionService
+namespace BE.Application.Services.SessionService
 {
     public class SessionLogicService : ISessionLogicService
     {
