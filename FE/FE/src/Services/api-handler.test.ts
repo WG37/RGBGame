@@ -1,4 +1,4 @@
-import { getAllGames } from "./api-handler";
+import { getAllGames } from "./api";
 
 // mock api test fetches games from api
 global.fetch = jest.fn(() =>
