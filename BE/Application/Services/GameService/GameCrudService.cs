@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RGB.Application.DTOs;
-using RGB.Application.DTOs.GameServiceDtos;
-using RGB.Domain.Entities;
 using RGBGame.Application.DTOs.GameServiceDtos;
+using RGBGame.Domain.Entities;
 using RGBGame.Infrastructure.Data;
 
 namespace RGBGame.Application.Services.GameService

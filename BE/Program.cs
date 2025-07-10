@@ -28,6 +28,7 @@ namespace RGBGame
             builder.Services.AddCors(p => p.AddPolicy("AllowClient",
                 config => config.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
+            
             builder.Services.AddControllers()
                    .AddJsonOptions(o =>
                    {

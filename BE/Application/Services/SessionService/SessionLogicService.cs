@@ -19,6 +19,7 @@ namespace RGBGame.Application.Services.SessionService
                 .SingleOrDefaultAsync(s => s.Id == sessionId) ??
                     throw new ArgumentException($"No session exists with id: {sessionId}", nameof(sessionId));
 
+
             // no reusing numbers -- hashed out
             var used = session.Answers.Select(a => a.Number).ToHashSet();
 
