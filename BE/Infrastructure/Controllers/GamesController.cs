@@ -1,4 +1,4 @@
-﻿using BE.Application.DTOs.GameServiceDtos;
+﻿using BE.Application.DTOs.GameDTOs;
 using BE.Application.Services.GameService;
 using Microsoft.AspNetCore.Mvc;
 

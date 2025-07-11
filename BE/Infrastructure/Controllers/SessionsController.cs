@@ -1,5 +1,5 @@
 ﻿using BE.Application.DTOs;
-using BE.Application.DTOs.SessionServiceDtos;
+using BE.Application.DTOs.SessionDTOs;
 using BE.Application.Services.SessionService;
 using Microsoft.AspNetCore.Mvc;
 
