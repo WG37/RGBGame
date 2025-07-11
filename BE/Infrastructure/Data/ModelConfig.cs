@@ -7,54 +7,96 @@ namespace BE.Infrastructure.Data
     {
         public static void ConfigureModel(ModelBuilder modelBuilder)
         {
-            /* game has many rules 
-                => each rule references the game by GameId */
+            ConfigureGame(modelBuilder);
+            ConfigureRule(modelBuilder);
+            ConfigureSession(modelBuilder);
+            ConfigureSessionAnswer(modelBuilder);
+        }
 
-            modelBuilder.Entity<Game>()
-                .HasMany(g => g.Rules)
-                .WithOne(r => r.Game)
-                .HasForeignKey(r => r.GameId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Game>()
-                .HasMany(g => g.Sessions)
-                .WithOne(s => s.Game)
-                .HasForeignKey(s => s.GameId);
-
-            // checks that rule table divisor property is non-negative (expressed w/ SQL)
-            modelBuilder.Entity<Rule>()
-                .ToTable(t => t.HasCheckConstraint("CK_Rule_NonNegDivisor", "[DIVISOR] >= 0"))
-                .Property(r => r.Divisor)
-                .IsRequired();
-                
-
-            // ensure unique game names
-            modelBuilder.Entity<Game>()
-                .HasIndex(g => g.Name)
-                .IsUnique();
-
-
-            // session config
-            modelBuilder.Entity<Session>(builder =>
+        private static void ConfigureGame(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Game>(entity =>
             {
-                builder.HasKey(s => s.Id);
-                builder.Property(s => s.GameId).IsRequired();   // gameId cannot be null
-                builder.Property(s => s.Start).IsRequired();    
-                builder.Property(s => s.End);
-                builder.HasMany(s => s.Answers)
-                       .WithOne(a => a.Session)
-                       .HasForeignKey(a => a.SessionId)
-                       .OnDelete(DeleteBehavior.Cascade);
+                entity.HasKey(g => g.Id);
+
+                entity.Property(g => g.Name)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(g => g.Author)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.HasIndex(g => g.Name)
+                      .IsUnique();
+
+                entity.HasMany(g => g.Rules)
+                      .WithOne(r => r.Game)
+                      .HasForeignKey(r => r.GameId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasMany(g => g.Sessions)
+                      .WithOne(s => s.Game)
+                      .HasForeignKey(s => s.GameId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
+        }
 
-
-            modelBuilder.Entity<SessionAnswer>(builder =>
+        private static void ConfigureRule(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Rule>(entity =>
             {
-                builder.HasKey(a => a.Id);
-                builder.Property(a => a.Number).IsRequired();
-                builder.Property(a => a.AnswerSubmission).IsRequired();
-                builder.Property(a => a.ExpectedAnswer).IsRequired();
-                builder.Property(a => a.IsCorrect).IsRequired();
+                entity.HasKey(r => r.Id);
+
+                entity.Property(r => r.Divisor)
+                      .IsRequired();
+
+                entity.Property(r => r.Word)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.ToTable(t => t.HasCheckConstraint("CK_Rule_NonNegDivisor", "[Divisor] >= 0"));
+            });
+        }
+
+        private static void ConfigureSession(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Session>(entity =>
+            {
+                entity.HasKey(s => s.Id);
+
+                entity.Property(s => s.GameId)
+                      .IsRequired();
+
+                entity.Property(s => s.Start)
+                      .IsRequired();
+
+                entity.Property(s => s.End);
+
+                entity.HasMany(s => s.Answers)
+                      .WithOne(a => a.Session)
+                      .HasForeignKey(a => a.SessionId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+        }
+
+        private static void ConfigureSessionAnswer(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SessionAnswer>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+
+                entity.Property(a => a.Number)
+                      .IsRequired();
+
+                entity.Property(a => a.AnswerSubmission)
+                      .IsRequired();
+
+                entity.Property(a => a.ExpectedAnswer)
+                      .IsRequired();
+
+                entity.Property(a => a.IsCorrect)
+                      .IsRequired();
             });
         }
     }
