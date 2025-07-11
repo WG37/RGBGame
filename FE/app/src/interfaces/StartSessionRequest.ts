@@ -1,0 +1,1 @@
+export interface StartSessionRequest { gameId: number; }

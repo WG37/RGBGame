@@ -1,0 +1,1 @@
+export interface RuleDto {divisor: number, word: string}

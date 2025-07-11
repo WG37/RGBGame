@@ -1,0 +1,1 @@
+export interface CheckValueRequest { number: number; answer: string; }
