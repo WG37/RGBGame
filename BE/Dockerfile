@@ -8,15 +8,15 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # copy only the csproj and restore
-COPY ["RGBGame.csproj", "./"]
-RUN dotnet restore "RGBGame.csproj"
+COPY ["BE.csproj", "./"]
+RUN dotnet restore "BE.csproj"
 
 # copy everything else and build
 COPY . .
-RUN dotnet publish "RGBGame.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "BE.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "RGBGame.dll"]
+ENTRYPOINT ["dotnet", "BE.dll"]

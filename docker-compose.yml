@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   api:
-    build: ./RGBGame
+    build: ./BE
     ports:
       - "5000:5000"
     environment:
@@ -10,10 +10,11 @@ services:
     depends_on:
       - db
 
-  client:
+  frontend:
     build: 
-      context: ./Client/client
+      context: ./FE/app
       dockerfile: Dockerfile
+    image: app-frontend
     ports:
       - "3000:80"
     depends_on:
