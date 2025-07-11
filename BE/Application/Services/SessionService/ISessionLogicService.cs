@@ -1,4 +1,4 @@
-﻿using BE.Application.DTOs.SessionServiceDtos;
+﻿using BE.Application.DTOs.SessionDTOs;
 
 namespace BE.Application.Services.SessionService
 {

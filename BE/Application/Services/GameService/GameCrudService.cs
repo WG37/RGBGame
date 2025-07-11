@@ -1,8 +1,8 @@
-﻿using BE.Application.DTOs.GameServiceDtos;
+﻿using BE.Application.DTOs.GameDTOs;
+using BE.Application.DTOs.RuleDTO;
 using BE.Domain.Entities;
 using BE.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using RGBGame.Application.DTOs.GameServiceDtos;
 
 namespace BE.Application.Services.GameService
 {

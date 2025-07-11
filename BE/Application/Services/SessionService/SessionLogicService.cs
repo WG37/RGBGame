@@ -1,7 +1,8 @@
-﻿using BE.Application.DTOs.SessionServiceDtos;
+﻿using BE.Application.DTOs.SessionDTOs;
+using BE.Domain.Entities;
 using BE.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using RGBGame.Domain.Entities;
+
 
 namespace BE.Application.Services.SessionService
 {

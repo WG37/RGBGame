@@ -1,7 +1,7 @@
-﻿using BE.Application.DTOs.GameServiceDtos;
+﻿using BE.Application.DTOs.GameDTOs;
+using BE.Application.DTOs.RuleDTO;
 using BE.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using RGBGame.Application.DTOs.GameServiceDtos;
 
 namespace BE.Application.Services.GameService
 {
@@ -15,7 +15,7 @@ namespace BE.Application.Services.GameService
         {
             var game = await _db.Games
                 .Include(g => g.Rules)
-                .SingleOrDefaultAsync(g => g.Id == id) ??               // SingleOrDefault (PK => want exactly 1 match)
+                .SingleOrDefaultAsync(g => g.Id == id) ??               
                 throw new KeyNotFoundException($"Game {id} not found.");
 
             return new GameDto

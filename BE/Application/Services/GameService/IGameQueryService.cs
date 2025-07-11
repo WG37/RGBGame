@@ -1,4 +1,4 @@
-﻿using BE.Application.DTOs.GameServiceDtos;
+﻿using BE.Application.DTOs.GameDTOs;
 
 namespace BE.Application.Services.GameService
 {
