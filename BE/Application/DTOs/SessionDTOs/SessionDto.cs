@@ -1,4 +1,4 @@
-﻿namespace BE.Application.DTOs.SessionServiceDtos
+﻿namespace BE.Application.DTOs.SessionDTOs
 {
     public record SessionDto
     {
