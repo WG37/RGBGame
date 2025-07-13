@@ -23,6 +23,9 @@ namespace BE.Infrastructure.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (createDto.MinRange > createDto.MaxRange)
+                return BadRequest("The MinRange must be less than or equal to the MaxRange");
+
             try
             {
                 var game = await _crudService.CreateGameAsync(createDto);
@@ -39,6 +42,9 @@ namespace BE.Infrastructure.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (dto.MinRange > dto.MaxRange)
+                return BadRequest("The MinRange must be less than or equal to the MaxRange");
 
             try
             {
