@@ -12,10 +12,19 @@ namespace BE.Application.Services.SessionService
 
         public async Task<SessionDto> StartSessionAsync(int gameId)
         {
-            var game = await _db.Games
-                .Include(g => g.Rules)
-                .SingleOrDefaultAsync(g => g.Id == gameId) ??
-                 throw new ArgumentException($"No game exists with {gameId}", nameof(gameId));
+            
+            Game game;
+            try
+            {
+                game = await _db.Games
+                    .Include(g => g.Rules)
+                    .SingleOrDefaultAsync(g => g.Id == gameId)
+                    ?? throw new ArgumentException($"No game exists with id: {gameId}", nameof(gameId));
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Database error while retrieving game for new session.", ex);
+            }
 
             // random number start from in range
             var rnd = new Random();
@@ -33,8 +42,16 @@ namespace BE.Application.Services.SessionService
                 Answers = new List<SessionAnswer>()
             };
 
-            _db.Sessions.Add(session);
-            await _db.SaveChangesAsync();
+            
+            try
+            {
+                _db.Sessions.Add(session);
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Database error while creating new session.", ex);
+            }
 
             return new SessionDto
             {
@@ -48,13 +65,21 @@ namespace BE.Application.Services.SessionService
             };
         }
 
-       
         public async Task<SessionDto> GetGameResultsAsync(Guid sessionId)
         {
-            var session = await _db.Sessions
-                .Include(s => s.Answers)
-                .SingleOrDefaultAsync(s => s.Id == sessionId) ?? 
-                    throw new ArgumentException($"No existing session with the id: {sessionId}", nameof(sessionId));
+            
+            Session session;
+            try
+            {
+                session = await _db.Sessions
+                    .Include(s => s.Answers)
+                    .SingleOrDefaultAsync(s => s.Id == sessionId)
+                    ?? throw new ArgumentException($"No existing session with id: {sessionId}", nameof(sessionId));
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Database error while retrieving session results.", ex);
+            }
 
             return new SessionDto
             {
@@ -66,15 +91,16 @@ namespace BE.Application.Services.SessionService
                 CorrectTotal = session.CorrectTotal,
                 IncorrectTotal = session.IncorrectTotal,
                 Answers = session.Answers
-                            .Select(a => new SessionAnswerDto
-                            {
-                                Id = a.Id,
-                                SessionId = a.SessionId,
-                                Number = a.Number,
-                                AnswerSubmission = a.AnswerSubmission,
-                                ExpectedAnswer = a.ExpectedAnswer,
-                                IsCorrect = a.IsCorrect
-                            }).ToList()
+                                    .Select(a => new SessionAnswerDto
+                                    {
+                                        Id = a.Id,
+                                        SessionId = a.SessionId,
+                                        Number = a.Number,
+                                        AnswerSubmission = a.AnswerSubmission,
+                                        ExpectedAnswer = a.ExpectedAnswer,
+                                        IsCorrect = a.IsCorrect
+                                    })
+                                    .ToList()
             };
         }
     }

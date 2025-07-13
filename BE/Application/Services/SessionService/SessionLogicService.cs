@@ -3,7 +3,6 @@ using BE.Domain.Entities;
 using BE.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace BE.Application.Services.SessionService
 {
     public class SessionLogicService : ISessionLogicService
@@ -13,13 +12,21 @@ namespace BE.Application.Services.SessionService
 
         public async Task<SessionDto> NextNumberAsync(Guid sessionId)
         {
-            var session = await _db.Sessions
-                .Include(s => s.Game)
-                .ThenInclude(g => g.Rules)
-                .Include(s => s.Answers)
-                .SingleOrDefaultAsync(s => s.Id == sessionId) ??
-                    throw new ArgumentException($"No session exists with id: {sessionId}", nameof(sessionId));
-
+            // wraps query
+            Session session;
+            try
+            {
+                session = await _db.Sessions
+                    .Include(s => s.Game)
+                        .ThenInclude(g => g.Rules)
+                    .Include(s => s.Answers)
+                    .SingleOrDefaultAsync(s => s.Id == sessionId)
+                    ?? throw new ArgumentException($"No session exists with id: {sessionId}", nameof(sessionId));
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Database error while retrieving session for next number.", ex);
+            }
 
             // no reusing numbers -- hashed out
             var used = session.Answers.Select(a => a.Number).ToHashSet();
@@ -38,7 +45,16 @@ namespace BE.Application.Services.SessionService
             var next = sampleSpace[rnd.Next(sampleSpace.Count)]; // next number randomly pulled from the space
 
             session.CurrentNumber = next;
-            await _db.SaveChangesAsync();
+
+            // wrap the save
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Database error while saving next number.", ex);
+            }
 
             // return incremented value
             return new SessionDto
@@ -51,7 +67,7 @@ namespace BE.Application.Services.SessionService
                 CorrectTotal = session.CorrectTotal,
                 IncorrectTotal = session.IncorrectTotal,
                 Answers = session.Answers
-                                 .Select(a => new SessionAnswerDto 
+                                 .Select(a => new SessionAnswerDto
                                  {
                                      Id = a.Id,
                                      SessionId = a.SessionId,
@@ -66,12 +82,21 @@ namespace BE.Application.Services.SessionService
 
         public async Task<SessionAnswerDto> CheckValueAsync(Guid sessionId, int number, string answer)
         {
-            var session = await _db.Sessions
-                .Include(s => s.Game)
-                .ThenInclude(g => g.Rules)
-                .SingleOrDefaultAsync(s => s.Id == sessionId) ??
-                throw new ArgumentException(
-                    $"No session exists with id: {sessionId}", nameof(sessionId));
+            
+            Session session;
+            try
+            {
+                session = await _db.Sessions
+                    .Include(s => s.Game)
+                        .ThenInclude(g => g.Rules)
+                    .SingleOrDefaultAsync(s => s.Id == sessionId)
+                    ?? throw new ArgumentException(
+                        $"No session exists with id: {sessionId}", nameof(sessionId));
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Database error while retrieving session for answer check.", ex);
+            }
 
             if (number != session.CurrentNumber)
                 throw new InvalidOperationException(
@@ -105,7 +130,16 @@ namespace BE.Application.Services.SessionService
             };
 
             _db.Answers.Add(persistAnswer);
-            await _db.SaveChangesAsync();
+
+            
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Database error while saving answer.", ex);
+            }
 
             return new SessionAnswerDto
             {
